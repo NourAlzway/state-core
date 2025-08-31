@@ -1,0 +1,7 @@
+[
+  {
+    "name": "state-core",
+    "path": "dist/index.js",
+    "limit": "10 KB"
+  }
+]
