@@ -43,7 +43,7 @@
   "homepage": "https://github.com/NourAlzway/state-core#readme",
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
-    "@commitlint/cli": "^19.0.0",
+    "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.0.0",
     "@size-limit/preset-small-lib": "^11.0.0",
     "@types/jest": "^29.5.0",
