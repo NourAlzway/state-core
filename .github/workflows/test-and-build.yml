@@ -21,6 +21,13 @@ jobs:
       fail-fast: false
 
     steps:
+      - name: Configure Git (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+        shell: bash
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -34,6 +41,14 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Fix line endings (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          echo "Normalizing line endings for Windows..."
+          npx prettier --write "src/**/*.{ts,tsx,js,json,md}" --end-of-line lf
+          echo "Line ending normalization complete"
+        shell: bash
 
       - name: Run type checking
         run: npm run typecheck
