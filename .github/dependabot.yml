@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 10
+    reviewers:
+      - 'NourAlzway'
+    assignees:
+      - 'NourAlzway'
+    commit-message:
+      prefix: 'chore'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+    versioning-strategy: 'increase'
+    groups:
+      development-dependencies:
+        dependency-type: 'development'
+        patterns:
+          - '@types/*'
+          - 'eslint*'
+          - 'prettier*'
+          - '@typescript-eslint/*'
+      build-dependencies:
+        patterns:
+          - 'rollup*'
+          - '@rollup/*'
+          - 'typescript'
+      testing-dependencies:
+        patterns:
+          - 'jest*'
+          - '@jest/*'
+          - 'ts-jest'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/.github/workflows'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'ci'
+    labels:
+      - 'github-actions'
