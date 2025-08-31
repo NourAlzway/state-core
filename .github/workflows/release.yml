@@ -17,6 +17,7 @@ jobs:
       contents: write
       id-token: write
       pull-requests: write
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -56,14 +57,30 @@ jobs:
 
       - name: Create GitHub Release
         if: steps.changesets.outputs.published == 'true'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}
-          release_name: Release v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}
+          name: Release v${{ fromJson(steps.changesets.outputs.publishedPackages)[0].version }}
           body: |
-            Changes in this release:
+            ## Changes
+
             ${{ steps.changesets.outputs.changelog }}
+
+            ## Package Information
+
+            **Published Packages:**
+            ${{ steps.changesets.outputs.publishedPackages }}
+
+            ---
+
+            For full changelog, see [CHANGELOG.md](https://github.com/NourAlzway/state-core/blob/master/CHANGELOG.md)
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on successful release
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          echo "🎉 Successfully published packages:"
+          echo "${{ steps.changesets.outputs.publishedPackages }}"
