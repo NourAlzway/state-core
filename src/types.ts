@@ -1,4 +1,4 @@
 /**
- * Type definitions for the state-core library
+ * Type definitions for the acacus library
  * @packageDocumentation
  */

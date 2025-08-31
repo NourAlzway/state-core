@@ -70,7 +70,7 @@ jobs:
           # Publish to npm
           npm run release
 
-          echo "Published state-core@$NEW_VERSION"
+          echo "Published acacus@$NEW_VERSION"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -84,16 +84,16 @@ jobs:
           body: |
             ## Changes
 
-            See [CHANGELOG.md](https://github.com/NourAlzway/state-core/blob/master/CHANGELOG.md) for details.
+            See [CHANGELOG.md](https://github.com/NourAlzway/acacus/blob/master/CHANGELOG.md) for details.
 
             ## Package Information
 
-            **Package**: state-core@${{ steps.publish.outputs.version }}
+            **Package**: acacus@${{ steps.publish.outputs.version }}
             **Published**: ${{ github.event.head_commit.timestamp }}
 
             ---
 
-            Install with: `npm install state-core@${{ steps.publish.outputs.version }}`
+            Install with: `npm install acacus@${{ steps.publish.outputs.version }}`
           draft: false
           prerelease: false
         env:

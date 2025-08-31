@@ -1,6 +1,6 @@
-# Contributing to state-core
+# Contributing to acacus
 
-We love your input! We want to make contributing to state-core as easy and transparent as possible, whether it's:
+We love your input! We want to make contributing to acacus as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -26,8 +26,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/NourAlzway/state-core.git
-   cd state-core
+   git clone https://github.com/NourAlzway/acacus.git
+   cd acacus
    ```
 
 2. **Install dependencies:**
@@ -105,7 +105,7 @@ Examples:
 
 ## Reporting Bugs
 
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/NourAlzway/state-core/issues/new/choose).
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/NourAlzway/acacus/issues/new/choose).
 
 **Great Bug Reports** tend to have:
 
@@ -119,7 +119,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 
 ## Feature Requests
 
-We also use GitHub issues to track feature requests. You can [request a new feature](https://github.com/NourAlzway/state-core/issues/new/choose).
+We also use GitHub issues to track feature requests. You can [request a new feature](https://github.com/NourAlzway/acacus/issues/new/choose).
 
 ## License
 
@@ -127,4 +127,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ## Questions?
 
-Feel free to reach out by [opening an issue](https://github.com/NourAlzway/state-core/issues/new/choose) with the "question" label.
+Feel free to reach out by [opening an issue](https://github.com/NourAlzway/acacus/issues/new/choose) with the "question" label.

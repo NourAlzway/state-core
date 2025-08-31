@@ -1,6 +1,6 @@
 import { hello } from '../index';
 
-describe('state-core', () => {
+describe('acacus', () => {
   describe('hello function', () => {
     it('should return a formatted greeting', () => {
       const result = hello('World');

@@ -1,8 +1,8 @@
 {
-  "name": "state-core",
+  "name": "acacus",
   "version": "0.2.0",
   "type": "module",
-  "description": "A TypeScript state management core library.",
+  "description": "A React state management library.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NourAlzway/state-core.git"
+    "url": "git+https://github.com/NourAlzway/acacus.git"
   },
   "keywords": [
     "state",
@@ -39,9 +39,9 @@
   "author": "NourAlzway",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/NourAlzway/state-core/issues"
+    "url": "https://github.com/NourAlzway/acacus/issues"
   },
-  "homepage": "https://github.com/NourAlzway/state-core#readme",
+  "homepage": "https://github.com/NourAlzway/acacus#readme",
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@commitlint/cli": "^19.0.0",

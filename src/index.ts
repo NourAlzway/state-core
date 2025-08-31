@@ -1,5 +1,5 @@
 /**
- * Main entry point for the state-core library
+ * Main entry point for the acacus library
  * @packageDocumentation
  */
 

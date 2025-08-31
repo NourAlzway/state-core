@@ -1,8 +1,8 @@
-# state-core
+# acacus
 
-[![npm version](https://badge.fury.io/js/state-core.svg)](https://badge.fury.io/js/state-core)
-[![CI](https://github.com/NourAlzway/state-core/workflows/CI/badge.svg)](https://github.com/NourAlzway/state-core/actions)
-[![codecov](https://codecov.io/gh/NourAlzway/state-core/branch/master/graph/badge.svg)](https://codecov.io/gh/NourAlzway/state-core)
+[![npm version](https://badge.fury.io/js/acacus.svg)](https://badge.fury.io/js/acacus)
+[![CI](https://github.com/NourAlzway/acacus/workflows/CI/badge.svg)](https://github.com/NourAlzway/acacus/actions)
+[![codecov](https://codecov.io/gh/NourAlzway/acacus/branch/master/graph/badge.svg)](https://codecov.io/gh/NourAlzway/acacus)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 React State Core is a minimal state management library for React applications. It provides a simple and intuitive API for managing state in your components, making it easier to build and maintain complex UIs.
@@ -14,7 +14,7 @@ React State Core is a minimal state management library for React applications. I
 ## Installation
 
 ```bash
-npm install state-core
+npm install acacus
 ```
 
 ## Usage
@@ -28,8 +28,8 @@ npm install state-core
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/NourAlzway/state-core.git
-   cd state-core
+   git clone https://github.com/NourAlzway/acacus.git
+   cd acacus
    ```
 
 2. **Install dependencies**

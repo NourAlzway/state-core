@@ -10,7 +10,7 @@ We release patches for security vulnerabilities. Which versions are eligible for
 
 ## Reporting a Vulnerability
 
-Please report (suspected) security vulnerabilities by creating a [private security advisory](https://github.com/NourAlzway/state-core/security/advisories/new). You will receive a response from us within 72 hours. If the issue is confirmed, we will release a patch as soon as possible depending on complexity but historically within a few days.
+Please report (suspected) security vulnerabilities by creating a [private security advisory](https://github.com/NourAlzway/acacus/security/advisories/new). You will receive a response from us within 72 hours. If the issue is confirmed, we will release a patch as soon as possible depending on complexity but historically within a few days.
 
 ### What to include in your report
 
@@ -49,4 +49,4 @@ When using this library:
 
 For security-related questions or concerns, please contact us at:
 
-- GitHub: [Private Security Advisory](https://github.com/NourAlzway/state-core/security/advisories/new)
+- GitHub: [Private Security Advisory](https://github.com/NourAlzway/acacus/security/advisories/new)

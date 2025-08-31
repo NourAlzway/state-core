@@ -1,6 +1,6 @@
 [
   {
-    "name": "state-core",
+    "name": "acacus",
     "path": "dist/index.js",
     "limit": "10 KB"
   }
