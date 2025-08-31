@@ -5,7 +5,7 @@
 [![codecov](https://codecov.io/gh/NourAlzway/acacus/branch/master/graph/badge.svg)](https://codecov.io/gh/NourAlzway/acacus)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-React State Core is a minimal state management library for React applications. It provides a simple and intuitive API for managing state in your components, making it easier to build and maintain complex UIs.
+Acacus is a minimal state management library for React applications. It provides a simple and intuitive API for managing state in your components, making it easier to build and maintain complex UIs.
 
 ## Features
 
