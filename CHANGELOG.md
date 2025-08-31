@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Minor Changes
+
+- 3361fe3: update the name
+
 ## 0.2.0
 
 ### Minor Changes
