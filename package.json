@@ -1,0 +1,68 @@
+{
+  "name": "state-core",
+  "version": "0.1.0",
+  "description": "A TypeScript state management core library.",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "dev": "rollup -c -w",
+    "test": "jest",
+    "test:ci": "jest --coverage --ci --watchAll=false",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,json,md}'",
+    "format:check": "prettier --check 'src/**/*.{ts,tsx,js,json,md}'",
+    "size": "size-limit",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NourAlzway/state-core.git"
+  },
+  "keywords": [
+    "state",
+    "typescript",
+    "state-management",
+    "core"
+  ],
+  "author": "NourAlzway",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NourAlzway/state-core/issues"
+  },
+  "homepage": "https://github.com/NourAlzway/state-core#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@size-limit/preset-small-lib": "^11.0.0",
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "husky": "^9.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.0",
+    "rollup": "^4.0.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "size-limit": "^11.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {},
+  "engines": {
+    "node": ">=18"
+  },
+  "sideEffects": false
+}
