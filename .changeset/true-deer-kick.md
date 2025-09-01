@@ -1,0 +1,5 @@
+---
+'acacus': patch
+---
+
+Disabled coverageThreshold
