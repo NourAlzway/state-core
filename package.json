@@ -44,6 +44,7 @@
   "homepage": "https://github.com/NourAlzway/acacus#readme",
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
+    "@types/react": "^18.2.66",
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
     "@eslint/js": "^9.9.0",
@@ -65,7 +66,9 @@
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.0.0"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
   "engines": {
     "node": ">=18"
   },

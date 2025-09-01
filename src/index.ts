@@ -1,13 +1,22 @@
-/**
- * Main entry point for the acacus library
- * @packageDocumentation
- */
+// Primary function for creating new stores
+export { createStore } from './store';
 
-/**
- * A simple example function to demonstrate the setup
- * @param message - The message to display
- * @returns The formatted message
- */
-export function hello(message: string): string {
-  return `Hello, ${message}!`;
-}
+// React integration utilities
+export { useStore } from './hooks/use-store';
+
+// Core types
+export type {
+  StoreBuilder,
+  StoreInternal,
+  CallableStore,
+  Selector,
+  ActionFn,
+  EffectFn,
+  EffectHelpers,
+  Listener,
+  AsyncState,
+  StoreConfig,
+} from './types';
+
+// Utility functions
+export { deepEqual, deepClone } from './utils';
