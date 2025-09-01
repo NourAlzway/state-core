@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+### Minor Changes
+
+- ca0c3b6: core impl of the state builder
+
+### Patch Changes
+
+- dc5ade9: disabled all coverageThreshold
+- 637e6ad: Disabled coverageThreshold
+
 ## 0.3.0
 
 ### Minor Changes
