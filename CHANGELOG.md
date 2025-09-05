@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+### Minor Changes
+
+- 146fc73: ensure basic functionailty reaches 80% coverage
+
 ## 0.5.0
 
 ### Minor Changes
