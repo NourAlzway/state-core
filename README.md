@@ -1,7 +1,11 @@
-# acacus
+# Acacus
 
 [![npm version](https://badge.fury.io/js/acacus.svg)](https://badge.fury.io/js/acacus)
-[![CI](https://github.com/NourAlzway/acacus/workflows/CI/badge.svg)](https://github.com/NourAlzway/acacus/actions)
+[![npm downloads](https://img.shields.io/npm/dm/acacus.svg?style=flat&label=Monthly%20Downloads)](https://www.npmjs.com/package/acacus)
+![npm downloads](https://img.shields.io/npm/dt/acacus?style=flat&label=Total%20Downloads)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/acacus)](https://www.npmjs.com/package/acacus)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/acacus)](https://www.npmjs.com/package/acacus)
+[![CI](https://github.com/NourAlzway/acacus/actions/workflows/test-and-build.yml/badge.svg)](https://github.com/NourAlzway/acacus/actions/workflows/test-and-build.yml)
 [![codecov](https://codecov.io/gh/NourAlzway/acacus/branch/master/graph/badge.svg)](https://codecov.io/gh/NourAlzway/acacus)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
