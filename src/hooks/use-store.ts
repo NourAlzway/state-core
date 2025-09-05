@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from 'react';
-import { StoreInternal, Selector } from '../types';
+import { StoreInternal, Selector, ValidStateType } from '../types';
 
 /**
  * React hook for subscribing to store state changes with optional data selection
  */
-export function useStore<T, R = T>(
+export function useStore<T extends ValidStateType, R = T>(
   store: StoreInternal<T>,
   selector?: Selector<T, R>
 ): R {
