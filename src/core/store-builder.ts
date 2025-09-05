@@ -2,13 +2,15 @@ import {
   StoreBuilder,
   StoreInternal,
   CallableStore,
-  ActionFn,
-  EffectFn,
-  AsyncActionFn,
+  StrictActionFn,
+  StrictEffectFn,
+  StrictAsyncActionFn,
   AsyncState,
   StoreConfig,
   ValidStateType,
   ValidActionArgs,
+  SafeRecord,
+  isFunction,
 } from '../types';
 import { createStoreInternal } from './store-internal';
 import { createAction } from './action-handler';
@@ -36,45 +38,81 @@ export class StoreBuilderImpl<
 
   action<K extends string, Args extends ValidActionArgs>(
     name: K,
-    fn: ActionFn<T, Args>
-  ): StoreBuilder<T, Actions & Record<K, (...args: Args) => void>> {
+    fn: StrictActionFn<T, Args>
+  ): StoreBuilder<T, Actions & SafeRecord<K, (...args: Args) => void>> {
+    if (!isFunction(fn)) {
+      throw new TypeError(`Action '${name}' must be a function`);
+    }
+
     const actionFn = createAction(this.store, name, fn);
-    this.store.actions[name] = actionFn as (...args: ValidActionArgs) => void;
-    return this as unknown as StoreBuilder<
-      T,
-      Actions & Record<K, (...args: Args) => void>
+
+    // Type-safe assignment using mapped interface
+    const typedActions = this.store.actions as SafeRecord<
+      string,
+      (...args: any[]) => void
     >;
+    typedActions[name] = actionFn;
+
+    // Safe type transformation using mapped types
+    type NewBuilder = StoreBuilder<
+      T,
+      Actions & SafeRecord<K, (...args: Args) => void>
+    >;
+    return this as NewBuilder;
   }
 
   asyncAction<K extends string, Args extends ValidActionArgs, R>(
     name: K,
-    fn: AsyncActionFn<T, Args, R>
+    fn: StrictAsyncActionFn<T, Args, R>
   ): StoreBuilder<
-    T & Record<K, AsyncState<R>>,
-    Actions & Record<K, (...args: Args) => Promise<void>>
+    T & SafeRecord<K, AsyncState<R>>,
+    Actions & SafeRecord<K, (...args: Args) => Promise<void>>
   > {
+    if (!isFunction(fn)) {
+      throw new TypeError(`Async action '${name}' must be a function`);
+    }
+
     // Initialize the async state in the store
     initializeAsyncState<T, R>(this.store, name);
 
     // Create the async action function
     const asyncActionFn = createAsyncAction(this.store, name, fn);
-    this.store.actions[name] = asyncActionFn as (
-      ...args: ValidActionArgs
-    ) => Promise<void>;
 
-    return this as unknown as StoreBuilder<
-      T & Record<K, AsyncState<R>>,
-      Actions & Record<K, (...args: Args) => Promise<void>>
+    // Type-safe assignment
+    const typedActions = this.store.actions as SafeRecord<
+      string,
+      (...args: any[]) => void | Promise<void>
     >;
+    typedActions[name] = asyncActionFn;
+
+    // Safe type transformation
+    type NewBuilder = StoreBuilder<
+      T & SafeRecord<K, AsyncState<R>>,
+      Actions & SafeRecord<K, (...args: Args) => Promise<void>>
+    >;
+    return this as NewBuilder;
   }
 
-  effect<K extends string>(name: K, fn: EffectFn<T>): StoreBuilder<T, Actions> {
-    this.store.effects[name] = fn;
+  effect<K extends string>(
+    name: K,
+    fn: StrictEffectFn<T>
+  ): StoreBuilder<T, Actions> {
+    if (!isFunction(fn)) {
+      throw new TypeError(`Effect '${name}' must be a function`);
+    }
+
+    // Type-safe assignment
+    const typedEffects = this.store.effects as SafeRecord<
+      string,
+      StrictEffectFn<T>
+    >;
+    typedEffects[name] = fn;
+
     executeEffect(this.store, name, fn);
     return this;
   }
 
-  asHook(): () => T & Actions {
+  asHook(): () => Readonly<T> & Actions {
     return createStoreHook<T, Actions>(this.store);
   }
 
