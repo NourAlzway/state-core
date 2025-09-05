@@ -12,14 +12,14 @@ export default {
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
-  // coverageThreshold: {
-  //   global: {
-  //     //branches: 80,
-  //     // functions: 80, // Disabled for now, TODO: Re-enable function coverage
-  //     //lines: 80,
-  //     //statements: 80,
-  //   },
-  // },
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
