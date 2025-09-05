@@ -92,10 +92,24 @@ Examples:
 
 ### Testing
 
-- Write tests for any new functionality
-- Ensure all tests pass before submitting a PR
-- Aim for high test coverage
-- Use descriptive test names that explain what is being tested
+We have comprehensive testing guidelines to ensure code quality and maintainability:
+
+- **Write tests for any new functionality** - All new features should include tests
+- **Follow our testing conventions** - See [docs/TESTING.md](./docs/TESTING.md) for detailed guidelines
+- **Use AAA pattern** - Structure tests with Arrange, Act, Assert comments
+- **Keep test files focused** - Maximum 300-400 lines per file, split by scope
+- **Ensure all tests pass** before submitting a PR
+- **Aim for high test coverage** on new code
+- **Use descriptive test names** that explain expected behavior
+
+Key testing practices:
+
+- Use scope-based file naming: `component-name.scope.test.ts`
+- Follow established mocking patterns for React hooks
+- Test both happy path and error scenarios
+- Keep tests readable with clear comments
+
+For complete testing guidelines, patterns, and examples, see our **[docs/Testing Guide](./docs/TESTING.md)**
 
 ### Types and Documentation
 
