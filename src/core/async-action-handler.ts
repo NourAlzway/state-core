@@ -6,9 +6,7 @@ import {
   ValidActionArgs,
 } from '../types';
 
-/**
- * Sets up the initial async state structure for an async action
- */
+// Initialize async state structure
 export function initializeAsyncState<T extends ValidStateType, R>(
   store: StoreInternal<T>,
   name: string
@@ -20,11 +18,44 @@ export function initializeAsyncState<T extends ValidStateType, R>(
     data: null,
   };
 
-  // Update the store state to include the async state
-  store.setState({
-    ...currentState,
-    [name]: asyncState,
-  } as T & Record<string, AsyncState<R>>);
+  const extendedState = Object.assign({}, currentState, { [name]: asyncState });
+  store.setState(extendedState);
+}
+
+// Check if property is AsyncState
+function isAsyncState<R>(
+  obj: unknown,
+  key: string
+): obj is Record<string, AsyncState<R>> {
+  if (!obj || typeof obj !== 'object' || obj === null) {
+    return false;
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(obj, key)) {
+    return false;
+  }
+
+  const record = obj as Record<string, unknown>;
+  const asyncState = record[key];
+
+  return (
+    asyncState !== null &&
+    typeof asyncState === 'object' &&
+    asyncState !== null &&
+    Object.prototype.hasOwnProperty.call(asyncState, 'loading') &&
+    Object.prototype.hasOwnProperty.call(asyncState, 'error') &&
+    Object.prototype.hasOwnProperty.call(asyncState, 'data')
+  );
+}
+
+/**
+ * Safely get async state from store state
+ */
+function getAsyncState<R>(state: unknown, name: string): AsyncState<R> | null {
+  if (isAsyncState<R>(state, name)) {
+    return state[name] || null;
+  }
+  return null;
 }
 
 /**
@@ -43,40 +74,41 @@ export function createAsyncAction<
     try {
       // Set loading state
       const currentState = store.getState();
-      store.setState({
-        ...currentState,
+      const existingAsyncState = getAsyncState<R>(currentState, name);
+
+      const loadingState = Object.assign({}, currentState, {
         [name]: {
           loading: true,
           error: null,
-          data:
-            (currentState as Record<string, AsyncState<R>>)[name]?.data || null,
+          data: existingAsyncState?.data || null,
         },
-      } as T & Record<string, AsyncState<R>>);
+      });
+      store.setState(loadingState);
 
       // Execute the async function
       const result = await fn(store.getState(), ...args);
 
       // Set success state
       const finalState = store.getState();
-      store.setState({
-        ...finalState,
+      const successState = Object.assign({}, finalState, {
         [name]: { loading: false, error: null, data: result },
-      } as T & Record<string, AsyncState<R>>);
+      });
+      store.setState(successState);
     } catch (error) {
       // Set error state
       const errorState = store.getState();
+      const existingErrorState = getAsyncState<R>(errorState, name);
       const finalError =
         error instanceof Error ? error : new Error(String(error));
 
-      store.setState({
-        ...errorState,
+      const finalErrorState = Object.assign({}, errorState, {
         [name]: {
           loading: false,
           error: finalError,
-          data:
-            (errorState as Record<string, AsyncState<R>>)[name]?.data || null,
+          data: existingErrorState?.data || null,
         },
-      } as T & Record<string, AsyncState<R>>);
+      });
+      store.setState(finalErrorState);
 
       // Use configurable error handler
       if (store.config.errorHandler) {
