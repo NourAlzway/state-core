@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+### Minor Changes
+
+- fd38203: add unit tests and increase coverage
+
 ## 0.4.0
 
 ### Minor Changes
