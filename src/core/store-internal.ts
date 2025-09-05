@@ -20,7 +20,7 @@ export function createStoreInternal<T extends ValidStateType>(
       const prevState = state;
       const nextState =
         typeof newState === 'object' && newState !== null
-          ? { ...state, ...newState }
+          ? Object.assign({}, state, newState)
           : newState;
 
       const finalState = nextState;

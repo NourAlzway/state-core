@@ -60,7 +60,7 @@ export interface AsyncState<T> {
   data: T | null;
 }
 
-export type ValidStateType = Record<string, unknown>;
+export type ValidStateType = object;
 
 export type ValidActionArgs = readonly unknown[];
 

@@ -30,7 +30,7 @@ export function createCallableStore<T extends ValidStateType, Actions>(
   // Create the combined state + actions + effects object
   const createFullState = (): Readonly<T> & Actions => {
     const state = store.getState();
-    const combined = { ...state, ...store.actions, ...boundEffects };
+    const combined = Object.assign({}, state, store.actions, boundEffects);
     return combined as Readonly<T> & Actions;
   };
 
@@ -47,11 +47,12 @@ export function createCallableStore<T extends ValidStateType, Actions>(
         store.getState,
         store.getState
       );
-      const stateWithActions = {
-        ...state,
-        ...store.actions,
-        ...boundEffects,
-      } as Readonly<T> & Actions;
+      const stateWithActions = Object.assign(
+        {},
+        state,
+        store.actions,
+        boundEffects
+      ) as Readonly<T> & Actions;
       return selector ? selector(stateWithActions) : stateWithActions;
     } catch {
       // If hooks cannot be used (outside render or multiple Reacts), return a non-reactive snapshot
