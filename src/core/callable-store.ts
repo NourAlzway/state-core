@@ -3,7 +3,9 @@ import {
   CallableStore,
   StoreInternal,
   ValidStateType,
-  EffectFn,
+  StrictEffectFn,
+  SafeRecord,
+  isFunction,
 } from '../types';
 import { createBoundEffect } from './effect-handler';
 
@@ -14,23 +16,30 @@ export function createCallableStore<T extends ValidStateType, Actions>(
   store: StoreInternal<T>
 ): CallableStore<T, Actions> {
   // Bind effects as well as actions
-  const boundEffects: Record<string, (...args: unknown[]) => void> = {};
+  const boundEffects: SafeRecord<string, (...args: unknown[]) => void> = {};
   Object.entries(store.effects).forEach(([name, effect]) => {
-    boundEffects[name] = createBoundEffect(store, name, effect as EffectFn<T>);
+    if (isFunction(effect)) {
+      boundEffects[name] = createBoundEffect(
+        store,
+        name,
+        effect as StrictEffectFn<T>
+      );
+    }
   });
 
   // Create the combined state + actions + effects object
-  const createFullState = (): T & Actions => {
+  const createFullState = (): Readonly<T> & Actions => {
     const state = store.getState();
-    return { ...state, ...store.actions, ...boundEffects } as T & Actions;
+    const combined = { ...state, ...store.actions, ...boundEffects };
+    return combined as Readonly<T> & Actions;
   };
 
   // Create a callable store that can be used as a hook
-  function callableStore(): T & Actions;
-  function callableStore<R>(selector: (state: T & Actions) => R): R;
+  function callableStore(): Readonly<T> & Actions;
+  function callableStore<R>(selector: (state: Readonly<T> & Actions) => R): R;
   function callableStore<R>(
-    selector?: (state: T & Actions) => R
-  ): R | (T & Actions) {
+    selector?: (state: Readonly<T> & Actions) => R
+  ): R | (Readonly<T> & Actions) {
     // Try to use the hook for reactive subscriptions
     try {
       const state = useSyncExternalStore(
@@ -42,7 +51,7 @@ export function createCallableStore<T extends ValidStateType, Actions>(
         ...state,
         ...store.actions,
         ...boundEffects,
-      } as T & Actions;
+      } as Readonly<T> & Actions;
       return selector ? selector(stateWithActions) : stateWithActions;
     } catch {
       // If hooks cannot be used (outside render or multiple Reacts), return a non-reactive snapshot
@@ -61,10 +70,14 @@ export function createCallableStore<T extends ValidStateType, Actions>(
   callableStore.subscribe = store.subscribe;
 
   // Add utility methods
-  callableStore.use = <R>(selector: (state: T & Actions) => R): R => {
+  callableStore.use = <R>(selector: (state: Readonly<T> & Actions) => R): R => {
+    if (!isFunction(selector)) {
+      throw new TypeError('Selector must be a function');
+    }
     const fullState = createFullState();
     return selector(fullState);
   };
 
-  return callableStore as unknown as CallableStore<T, Actions>;
+  // Type-safe return using proper callable store interface
+  return callableStore as CallableStore<T, Actions>;
 }
