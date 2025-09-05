@@ -1,42 +1,56 @@
-export type Listener<T> = (state: T, prevState: T) => void;
+export type Listener<T> = (state: Readonly<T>, prevState: Readonly<T>) => void;
 
-export type Selector<T, R = T> = (state: T) => R;
+export type Selector<T, R = T> = (state: Readonly<T>) => R;
 
-// Improved type utilities for better type inference
 export type NonFunctionKeys<T> = {
-  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? never : K;
+  [K in keyof T]: T[K] extends (...args: any[]) => any ? never : K;
 }[keyof T];
 
 export type StateOnly<T> = Pick<T, NonFunctionKeys<T>>;
 
 export type ActionKeys<T> = {
-  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
+  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;
 }[keyof T];
 
 export type ActionsOnly<T> = Pick<T, ActionKeys<T>>;
 
-/**
- * Function that can modify store state by returning partial updates or complete replacement
- *
- * **State merging behavior**: When you return a Partial<T>, the properties
- * are merged with the existing state at the top level only. Nested objects
- * are completely replaced, not deeply merged.
- *
- * @template T The store state type
- * @template Args The arguments passed to the action
- */
-export type ActionFn<T, Args extends unknown[]> = (
-  state: T,
+export const isObject = (
+  value: unknown
+): value is Record<PropertyKey, unknown> =>
+  value !== null && typeof value === 'object' && !Array.isArray(value);
+
+export const isFunction = (value: unknown): value is (...args: any[]) => any =>
+  typeof value === 'function';
+
+export const isPromise = <T = any>(value: unknown): value is Promise<T> =>
+  value instanceof Promise ||
+  (isObject(value) && isFunction((value as any).then));
+
+export type SafeRecord<K extends keyof any = string, V = unknown> = Record<
+  K,
+  V
+>;
+
+export type ActionFn<T, Args extends ValidActionArgs> = (
+  state: Readonly<T>,
   ...args: Args
 ) => Partial<T> | T;
 
+export type StrictActionFn<T, Args extends ValidActionArgs> = ActionFn<T, Args>;
+export type StrictAsyncActionFn<
+  T,
+  Args extends ValidActionArgs,
+  R,
+> = AsyncActionFn<T, Args, R>;
+export type StrictEffectFn<T> = EffectFn<T>;
+
 export type EffectFn<T> = (
-  state: T,
+  state: Readonly<T>,
   helpers: EffectHelpers<T>
 ) => void | Promise<void>;
 
-export type AsyncActionFn<T, Args extends unknown[], R> = (
-  state: T,
+export type AsyncActionFn<T, Args extends ValidActionArgs, R> = (
+  state: Readonly<T>,
   ...args: Args
 ) => Promise<R>;
 
@@ -46,32 +60,13 @@ export interface AsyncState<T> {
   data: T | null;
 }
 
-// Strict type constraints
 export type ValidStateType = Record<string, unknown>;
-export type ValidActionArgs = unknown[];
 
-// Enhanced type for actions with better constraint checking
-export type StrictActionFn<
-  T extends ValidStateType,
-  Args extends ValidActionArgs,
-> = (state: T, ...args: Args) => Partial<T> | T;
-
-// Enhanced type for async actions
-export type StrictAsyncActionFn<
-  T extends ValidStateType,
-  Args extends ValidActionArgs,
-  R,
-> = (state: T, ...args: Args) => Promise<R>;
-
-// Type-safe effect function
-export type StrictEffectFn<T extends ValidStateType> = (
-  state: T,
-  helpers: EffectHelpers<T>
-) => void | Promise<void>;
+export type ValidActionArgs = readonly unknown[];
 
 export interface EffectHelpers<T> {
   set: (newState: Partial<T> | T) => void;
-  get: () => T;
+  get: () => Readonly<T>;
 }
 
 export type ErrorHandler = (
@@ -81,147 +76,64 @@ export type ErrorHandler = (
 ) => void;
 
 export interface StoreConfig {
-  errorHandler?: ErrorHandler;
-  devMode?: boolean;
+  readonly errorHandler?: ErrorHandler;
+  readonly devMode?: boolean;
+  readonly batchUpdates?: boolean;
+  readonly enablePerformanceTracking?: boolean;
 }
 
-export interface StoreInternal<T> {
-  getState: () => T;
-  /**
-   * Updates the store state with new values
-   *
-   * **State merging behavior**:
-   * When you pass a Partial<T>, the properties are merged with the current state
-   * at the top level only. Nested objects are completely replaced, not deeply merged.
-   *
-   * @example
-   * ```typescript
-   * // Current state: { user: { name: 'John', age: 30 }, count: 5 }
-   *
-   * // This will merge at the top level but replace the entire user object
-   * setState({ user: { name: 'Jane' } })
-   * // Result: { user: { name: 'Jane' }, count: 5 }
-   * // The age property is lost because the entire user object was replaced
-   *
-   * // To preserve nested properties, spread them manually:
-   * setState({ user: { ...currentState.user, name: 'Jane' } })
-   * // Result: { user: { name: 'Jane', age: 30 }, count: 5 }
-   * ```
-   */
+export interface StoreInternal<T extends ValidStateType> {
+  getState: () => Readonly<T>;
+  // Updates state - shallow merge only
   setState: (newState: Partial<T> | T) => void;
   subscribe: (listener: Listener<T>) => () => void;
-  actions: Record<string, (...args: ValidActionArgs) => void | Promise<void>>;
-  effects: Record<string, EffectFn<T>>;
-  config: StoreConfig;
+  readonly actions: SafeRecord<
+    string,
+    (...args: ValidActionArgs) => void | Promise<void>
+  >;
+  readonly effects: SafeRecord<string, EffectFn<T>>;
+  readonly config: Readonly<StoreConfig>;
 }
 
-// More type-safe callable store with better constraints
-export type CallableStore<T, Actions = Record<string, never>> = {
-  // Overloads for better type inference
-  (): T & Actions;
-  <R>(selector: (state: T & Actions) => R): R;
+export type CallableStore<
+  T extends ValidStateType,
+  Actions = SafeRecord<string, never>,
+> = {
+  (): Readonly<T> & Actions;
+  <R>(selector: (state: Readonly<T> & Actions) => R): R;
 
-  // Utility methods with strict typing
-  use: <R>(selector: (state: T & Actions) => R) => R;
+  use: <R>(selector: (state: Readonly<T> & Actions) => R) => R;
   subscribe: (listener: Listener<T>) => () => void;
 } & Omit<StoreInternal<T>, 'getState' | 'setState' | 'subscribe'>;
 
-// Type-safe store internal interface with constraints
-export interface TypeSafeStoreInternal<T extends ValidStateType>
-  extends Omit<StoreInternal<T>, 'getState' | 'setState'> {
-  getState: () => T;
-  setState: (newState: Partial<T> | T) => void;
-}
-
-/**
- * Store builder interface that provides a fluent API for configuring stores
- *
- * @template T The store state type (must be a valid object type)
- * @template Actions The accumulated actions type (built progressively through chaining)
- */
 export interface StoreBuilder<
   T extends ValidStateType,
   Actions = Record<string, never>,
 > {
-  /**
-   * Adds a synchronous action to the store
-   *
-   * Actions receive the current state and can return partial or complete state updates.
-   * State updates are merged at the top level only.
-   *
-   * @param name The action name (becomes available as a method on the store)
-   * @param fn The function that handles the action
-   * @returns StoreBuilder with the new action added to the type signature
-   */
   action<K extends string, Args extends ValidActionArgs>(
     name: K,
     fn: StrictActionFn<T, Args>
-  ): StoreBuilder<T, Actions & Record<K, (...args: Args) => void>>;
+  ): StoreBuilder<T, Actions & SafeRecord<K, (...args: Args) => void>>;
 
-  /**
-   * Adds an async action with automatic loading and error state management
-   *
-   * Creates a nested state structure at `state[name]` with the following properties:
-   * - loading: boolean - indicates if the async operation is currently running
-   * - error: Error | null - contains any error that occurred during execution
-   * - data: R | null - holds the successful result of the async operation
-   *
-   * @param name The async action name
-   * @param fn The async function to execute
-   * @returns StoreBuilder with async state properties added to the store type
-   *
-   * @example
-   * ```typescript
-   * const store = createStore({ users: [] })
-   *   .asyncAction('fetchUsers', async () => {
-   *     return await api.getUsers();
-   *   })
-   *   .build();
-   *
-   * // Store state becomes: { users: [], fetchUsers: { loading: false, error: null, data: null } }
-   *
-   * const { fetchUsers } = store();
-   * await fetchUsers(); // Automatically updates loading/error states
-   * ```
-   */
-  asyncAction<K extends string, Args extends unknown[], R>(
+  asyncAction<K extends string, Args extends ValidActionArgs, R>(
     name: K,
-    fn: AsyncActionFn<T, Args, R>
+    fn: StrictAsyncActionFn<T, Args, R>
   ): StoreBuilder<
-    T & Record<K, AsyncState<R>>,
-    Actions & Record<K, (...args: Args) => Promise<void>>
+    T & SafeRecord<K, AsyncState<R>>,
+    Actions & SafeRecord<K, (...args: Args) => Promise<void>>
   >;
 
-  /**
-   * Adds a side effect to the store
-   *
-   * Effects are operations that can read and modify state but don't return values.
-   * They execute immediately when added and can be asynchronous.
-   *
-   * @param name The effect name
-   * @param fn The effect function
-   */
-  effect<K extends string>(name: K, fn: EffectFn<T>): StoreBuilder<T, Actions>;
+  effect<K extends string>(
+    name: K,
+    fn: StrictEffectFn<T>
+  ): StoreBuilder<T, Actions>;
 
-  /**
-   * Creates a React hook version of the store
-   *
-   * @returns A React hook that automatically subscribes to store changes
-   */
-  asHook(): () => T & Actions;
+  asHook(): () => Readonly<T> & Actions;
 
-  /**
-   * Creates the final callable store instance
-   *
-   * Returns a store that supports the destructuring pattern for accessing
-   * both state and actions: `const { state, actions } = store()`
-   *
-   * @returns The callable store ready for use
-   */
   build(): CallableStore<T, Actions>;
 }
 
-export interface StoreHook<T> {
-  (): T;
-  <R>(selector: Selector<T, R>): R;
+export interface StoreHook<T extends ValidStateType> {
+  (): Readonly<T>;
+  <R>(selector: Selector<Readonly<T>, R>): R;
 }
